@@ -31,14 +31,16 @@ const updateEmployye=async(req,res)=>{
     const result=await employee.save()
     res.json(result)
 }
-const deleteEmployee=(req,res)=>{
-    const employee=data.employees.find(emp=>emp.id===parseInt(req.body.id))
-    if(!employee){
-        return res.status(400).json({"message":`Employee ID ${req.body.id} not found` })
+const deleteEmployee=async (req,res)=>{
+    if(res?.body?.id){
+        return res.status(400).json({"message":"id is required"})
     }
-    const filteredArray=data.employees.filter(emp=>emp.id!==parseInt(req.body.id))
-    data.setEmployyes([...filteredArray])
-    res.json(data.employees)
+    const employee=await Employee.findOne({_id:req.body.id}).exec()
+    if(!employee){
+        return res.status(400).json({"message":` no Employee match with this ID ${req.body.id} not found` })
+    }
+    const result=await employee.deleteOne()
+    res.json(result)
 }
 const getEmployee=(req,res)=>{
     const employee=data.employees.find(emp=>emp.id===parseInt(req.body.id))
