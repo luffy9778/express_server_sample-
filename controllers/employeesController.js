@@ -4,18 +4,19 @@ const getAllemployees=async(req,res)=>{
    if(!employees)return res.status(204).json({"message":"no emloyee found on db"})
     res.json(employees)
 }
-const createNewEmployye=(req,res)=>{
-    const newEmloyee={
-        // id:data.employees?.length?data.employees[data.employees.length-1].id+1:1,
-        firstname:req.body.firstname,
-        lastname:req.body.lastname
-    }
-    if(!newEmloyee.firstname||!newEmloyee.lastname){
+const createNewEmployye=async(req,res)=>{
+    if(!req?.body?.firstname||!req?.body?.lastname){
         return res.status(400).json({'message':"firstname and lastname are required"})
     }
-   Employee.create(newEmloyee)
-    res.status(201).json(data.employees)
-
+    try {
+        const result=await Employee.create({
+            firstname:req.body.firstname,
+            lastname:req.body.lastname
+        })
+        res.status(201).json(result)
+    } catch (error) {
+        console.log(error)
+    }
 }
 const updateEmployye=(req,res)=>{
     const employee=data.employees.find(emp=>emp.id===parseInt(req.body.id))
