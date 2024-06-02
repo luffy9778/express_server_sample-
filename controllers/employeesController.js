@@ -1,6 +1,8 @@
-const Employee=require("../model/Employee")
-const getAllemployees=(req,res)=>{
-    res.json(data.employees)
+const Employee = require("../model/Employee")
+const getAllemployees=async(req,res)=>{
+   const employees=await Employee.find()
+   if(!employees)return res.status(204).json({"message":"no emloyee found on db"})
+    res.json(employees)
 }
 const createNewEmployye=(req,res)=>{
     const newEmloyee={
